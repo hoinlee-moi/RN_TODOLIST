@@ -4,6 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import CreateEditTodo from '../screens/CreateEditTodo';
 import TodoList from '../screens/TodoList';
 import IconButton from '../components/ui/IconButton';
+import {GlobalStyle} from '../constants/styles';
 
 const Stack = createNativeStackNavigator();
 
@@ -13,8 +14,8 @@ const Navigation = () => {
       <Stack.Navigator
         initialRouteName="TodoList"
         screenOptions={{
-          headerStyle: {backgroundColor: '#F7FFE5'},
-          headerTintColor: '#A0C49D',
+          headerStyle: {backgroundColor: GlobalStyle.colors.primary100},
+          headerTintColor: GlobalStyle.colors.primary400,
           headerTitleStyle: {fontWeight: 'bold', fontSize: 20},
           headerTitleAlign: 'center',
         }}>
@@ -28,7 +29,14 @@ const Navigation = () => {
           component={CreateEditTodo}
           options={({navigation}) => ({
             title: 'TO DO',
-            headerLeft: () => <IconButton />,
+            headerLeft: () => (
+              <IconButton
+                icon="arrowleft"
+                size={20}
+                color={GlobalStyle.colors.primary400}
+                onPress={() => navigation.navigate('TodoList')}
+              />
+            ),
           })}
         />
       </Stack.Navigator>
