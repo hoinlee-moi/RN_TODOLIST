@@ -1,9 +1,10 @@
-import {Text,Button} from 'react-native';
+import {Button, Pressable, Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import CreateEditTodo from '../screens/CreateEditTodo';
 import TodoList from '../screens/TodoList';
+import IconButton from '../components/ui/IconButton';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,12 +29,7 @@ const Navigation = () => {
           component={CreateEditTodo}
           options={({navigation}) => ({
             title: 'TO DO',
-            headerLeft: () => (
-              <Button
-                onPress={() => navigation.navigate('TodoList')}
-                title="< List"
-              />
-            ),
+            headerLeft: () => <IconButton />,
           })}
         />
       </Stack.Navigator>
