@@ -1,11 +1,13 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StatusBar, StyleSheet} from 'react-native';
+import Navigation from './navigation/Navigation';
 
 function App() {
   return (
-    <View style={styles.screen}>
-      <Text>Hello</Text>
-    </View>
+    <>
+      <StatusBar style="auto" />
+      <Navigation />
+    </>
   );
 }
 
