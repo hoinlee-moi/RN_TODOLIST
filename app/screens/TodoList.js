@@ -2,40 +2,42 @@ import {View, Text, StyleSheet, Pressable} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {images} from '../constants/images';
 import ImageButton from '../components/ui/ImageButton';
+import List from '../components/list/List';
+import { GlobalStyle } from '../constants/styles';
 
 const DUMMY_LIST = [
   {
     id: '0',
     content: 'todo1',
-    date: new Date('6월 21일'),
+    date: new Date('2022-3-12'),
     checked: false,
     tag: ['태그1'],
   },
   {
     id: '1',
     content: 'todo2',
-    date: new Date('2월 21일'),
+    date: new Date('2023-2-21'),
     checked: true,
     tag: [],
   },
   {
     id: '2',
     content: 'todo3',
-    date: new Date('3월 29일'),
+    date: new Date('2023-3-29'),
     checked: false,
     tag: ['태그1','태그2'],
   },
   {
     id: '3',
     content: 'todo4',
-    date: new Date('12월 21일'),
+    date: new Date('2023-12-21'),
     checked: true,
     tag: ['태그1'],
   },
   {
     id: '4',
     content: 'todo5',
-    date: new Date('1월 5일'),
+    date: new Date('2021-1-5'),
     checked: false,
     tag: ['태그1','태그2','태그3','태그4'],
   },
@@ -47,7 +49,7 @@ const TodoList = () => {
 
   return (
     <View style={styles.screen}>
-      <View></View>
+      <List list={DUMMY_LIST} />
       <ImageButton
         name={images.add}
         style={styles.buttonContainer}
@@ -63,7 +65,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: '#333333',
+    backgroundColor: GlobalStyle.colors.primary400,
   },
   buttonContainer: {
     position: 'absolute',

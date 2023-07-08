@@ -1,7 +1,6 @@
 import {Image, TouchableOpacity, StyleSheet} from 'react-native';
 
 const ImageButton = ({name, onPress, style}) => {
-  console.log(name)
   return (
     <TouchableOpacity onPress={onPress} style={style}>
       <Image style={styles.button} source={name} />
