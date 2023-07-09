@@ -1,9 +1,11 @@
-import {View, Text,Pressable, StyleSheet} from 'react-native';
+import {View, Text, Pressable, StyleSheet} from 'react-native';
 import {GlobalStyle} from '../../constants/styles';
 
-const Tag = ({tagName,onPress}) => {
+const Tag = ({tagName, onPress}) => {
+  const pressHandler = () => onPress(tagName);
+
   return (
-    <Pressable onpress={onPress}>
+    <Pressable onPress={pressHandler}>
       <View style={styles.tagBox}>
         <Text style={styles.tag}>{tagName}</Text>
       </View>

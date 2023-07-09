@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useContext} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
@@ -7,6 +7,7 @@ import ImageButton from '../components/ui/ImageButton';
 import List from '../components/list/List';
 import {GlobalStyle} from '../constants/styles';
 import TagList from '../components/list/TagList';
+import {TodoContext} from '../provider/todoContext';
 
 const DUMMY_LIST = [
   {
@@ -54,8 +55,10 @@ const DUMMY_LIST = [
 
 const TodoList = () => {
   const navigation = useNavigation();
-  const [tagList, setTagList] = useState(['태그1', '태그2', '태그3', '태그4']);
+  const todoCtx = useContext(TodoContext);
   const cancelHandler = () => navigation.navigate('CreateEditTodo');
+
+  
 
   return (
     <View style={styles.screen}>
@@ -63,7 +66,11 @@ const TodoList = () => {
         <View style={styles.tagTitleBox}>
           <Text style={styles.tagTitle}>Tag :</Text>
         </View>
-        <TagList tag={tagList} style={styles.tagNameContainer} />
+        <TagList
+          tag={todoCtx.filterTagList}
+          style={styles.tagNameContainer}
+          onPress={todoCtx.manageTagList.bind(this, 'delete')}
+        />
       </View>
       <List list={DUMMY_LIST} />
       <ImageButton
@@ -97,7 +104,7 @@ const styles = StyleSheet.create({
     minHeight: 30,
     marginHorizontal: 15,
     marginTop: 15,
-    borderRadius:5,
+    borderRadius: 5,
     backgroundColor: GlobalStyle.colors.primary200,
   },
   tagTitleBox: {

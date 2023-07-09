@@ -1,12 +1,15 @@
+import {useContext} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {Pressable, View, Text, StyleSheet} from 'react-native';
 
 import {GlobalStyle} from '../../constants/styles';
+import {TodoContext} from '../../provider/todoContext';
 import CheckBox from '../ui/CheckBox';
 import ItemDate from './ItemDate';
 import TagList from './TagList';
 
 const ListItem = ({id, content, date, checked, tag}) => {
+  const todoCtx = useContext(TodoContext);
   const navigation = useNavigation();
   const itemPressHandler = () =>
     navigation.navigate('CreateEditTodo', {itemId: id});
@@ -22,7 +25,11 @@ const ListItem = ({id, content, date, checked, tag}) => {
             <Text style={styles.todoContent}>{content}</Text>
           </View>
           {tag.length !== 0 && (
-            <TagList tag={tag} style={styles.tagContainer} />
+            <TagList
+              tag={tag}
+              style={styles.tagContainer}
+              onPress={todoCtx.manageTagList.bind(this, 'add')}
+            />
           )}
         </View>
         <ItemDate date={date} />

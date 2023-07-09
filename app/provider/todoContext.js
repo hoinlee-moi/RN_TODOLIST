@@ -4,11 +4,12 @@ import {getStorageTodoList, manageStorageTodo} from './storage';
 
 export const TodoContext = createContext({
   todoList: [],
-  tagFilter: tag => {},
+  filterTagList: [],
   addTodo: ({content, date, tag}) => {},
   deleteTodo: id => {},
   updateTodo: (id, {content, date, tag}) => {},
   checkTodo: id => {},
+  manageTagList: (tag, state) => {},
 });
 
 const TodoContextProvider = ({children}) => {
@@ -70,7 +71,8 @@ const TodoContextProvider = ({children}) => {
     return success;
   };
 
-  const manageTagList = (tag, state) => {
+  const manageTagList = (state, tag) => {
+    console.log(state, tag);
     switch (state) {
       case 'delete':
         const deleteTag = filterTagList.filter(filterTag => filterTag !== tag);
@@ -84,21 +86,17 @@ const TodoContextProvider = ({children}) => {
         return;
     }
   };
+  const value = {
+    todoList: todoList,
+    filterTagList: filterTagList,
+    addTodo: addTodo,
+    deleteTodo: deleteTodo,
+    updateTodo: updateTodo,
+    checkTodo: checkTodo,
+    manageTagList: manageTagList,
+  };
 
-  return (
-    <TodoContext.Provider
-      value={{
-        todoList,
-        filterTagList,
-        addTodo,
-        deleteTodo,
-        updateTodo,
-        checkTodo,
-        manageTagList,
-      }}>
-      {children}
-    </TodoContext.Provider>
-  );
+  return <TodoContext.Provider value={value}>{children}</TodoContext.Provider>;
 };
 
 export default TodoContextProvider;
