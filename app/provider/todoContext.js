@@ -2,6 +2,50 @@ import {createContext, useEffect, useState} from 'react';
 import {getRandom} from '../util/calculator';
 import {getStorageTodoList, manageStorageTodo} from './storage';
 
+const DUMMY_LIST = [
+  {
+    id: '0',
+    content: 'todo1',
+    date: new Date('2023-3-12'),
+    check: false,
+    tag: ['태그1'],
+  },
+  {
+    id: '1',
+    content: 'todo2',
+    date: new Date('2023-2-21'),
+    check: true,
+    tag: [],
+  },
+  {
+    id: '2',
+    content: 'todo3',
+    date: new Date('2023-3-29'),
+    check: false,
+    tag: [
+      '장보기',
+      '오늘밥먹을것임아아아',
+      '오늘밥먹을것임아아아2',
+      '오늘밥먹을것임아아아3오늘밥먹을것임아아아3오늘밥먹을것임아아아3오늘밥먹을것임아아아3오늘밥먹을것임아아아3오늘밥먹을것임아아아3',
+    ],
+  },
+  {
+    id: '3',
+    content: 'todo4',
+    date: new Date('2023-12-21'),
+    check: true,
+    tag: ['태그1'],
+  },
+  {
+    id: '4',
+    content:
+      'todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5',
+    date: new Date('2021-1-5'),
+    check: false,
+    tag: ['태그1', '태그2', '태그3', '태그4'],
+  },
+];
+
 export const TodoContext = createContext({
   todoList: [],
   filterTagList: [],
@@ -13,12 +57,12 @@ export const TodoContext = createContext({
 });
 
 const TodoContextProvider = ({children}) => {
-  const [todoList, setTodoList] = useState([]);
+  const [todoList, setTodoList] = useState(DUMMY_LIST);
   const [filterTagList, setFilterTagList] = useState([]);
 
-  useEffect(() => {
-    getTodoList();
-  }, []);
+  // useEffect(() => {
+  //   getTodoList();
+  // }, []);
 
   const getTodoList = async () => {
     const response = await getStorageTodoList();

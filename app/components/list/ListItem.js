@@ -8,7 +8,7 @@ import CheckBox from '../ui/CheckBox';
 import ItemDate from './ItemDate';
 import TagList from './TagList';
 
-const ListItem = ({id, content, date, checked, tag}) => {
+const ListItem = ({id, content, date, check, tag}) => {
   const todoCtx = useContext(TodoContext);
   const navigation = useNavigation();
   const itemPressHandler = () =>
@@ -19,7 +19,7 @@ const ListItem = ({id, content, date, checked, tag}) => {
       onPress={itemPressHandler}
       style={({pressed}) => pressed && styles.pressed}>
       <View style={styles.todoItemContainer}>
-        <CheckBox checked={checked} style={styles.checkBoxContainer} />
+        <CheckBox checked={check} style={styles.checkBoxContainer} />
         <View style={styles.todoContentContainer}>
           <View style={styles.todoWrap}>
             <Text style={styles.todoContent}>{content}</Text>

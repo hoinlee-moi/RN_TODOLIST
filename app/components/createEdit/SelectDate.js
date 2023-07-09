@@ -8,7 +8,7 @@ import {isPastDate} from '../../util/date';
 import ImageButton from '../ui/ImageButton';
 import Date from './Date';
 
-const SelectDate = () => {
+const SelectDate = ({addInputHandler}) => {
   const [date, setDate] = useState('');
   const [errorState, setErrorState] = useState(false);
   const [datePickerVisible, setDatePickerVisible] = useState();
@@ -26,6 +26,7 @@ const SelectDate = () => {
       return;
     }
     setDate(date);
+    addInputHandler('date',date)
   };
 
   return (
@@ -66,6 +67,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 150,
     height: 40,
+    borderRadius:2,
     backgroundColor: GlobalStyle.colors.primary200,
   },
   imageButtonContainer: {
