@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
     opacity: 0.75,
   },
   todoItemContainer: {
+    flex: 1,
     position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',

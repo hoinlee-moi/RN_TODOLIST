@@ -9,7 +9,7 @@ const DUMMY_LIST = [
   {
     id: '0',
     content: 'todo1',
-    date: new Date('2022-3-12'),
+    date: new Date('2023-3-12'),
     checked: false,
     tag: ['태그1'],
   },
@@ -64,7 +64,6 @@ const styles = StyleSheet.create({
   screen: {
     position: 'relative',
     flex: 1,
-    paddingHorizontal: 20,
     backgroundColor: GlobalStyle.colors.primary400,
   },
   buttonContainer: {
