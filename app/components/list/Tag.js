@@ -1,11 +1,13 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text,Pressable, StyleSheet} from 'react-native';
 import {GlobalStyle} from '../../constants/styles';
 
-const Tag = ({tagName}) => {
+const Tag = ({tagName,onPress}) => {
   return (
-    <View style={styles.tagBox}>
-      <Text style={styles.tag}>{tagName}</Text>
-    </View>
+    <Pressable onpress={onPress}>
+      <View style={styles.tagBox}>
+        <Text style={styles.tag}>{tagName}</Text>
+      </View>
+    </Pressable>
   );
 };
 export default Tag;
@@ -22,9 +24,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   tag: {
-    lineHeight:19,
-    paddingHorizontal:5,
-    paddingVertical:5,
+    lineHeight: 19,
+    paddingHorizontal: 5,
+    paddingVertical: 5,
     fontSize: 15,
     fontWeight: 'bold',
     color: '#fff',

@@ -1,11 +1,11 @@
 import {View} from 'react-native';
 import Tag from './Tag';
 
-const TagList = ({tag, style}) => {
+const TagList = ({tag, style,onPress}) => {
   return (
     <View style={style}>
       {tag.map(item => (
-        <Tag key={item} tagName={item} />
+        <Tag key={item} tagName={item} onPress={onPress} />
       ))}
     </View>
   );

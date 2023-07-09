@@ -13,6 +13,7 @@ export const TodoContext = createContext({
 
 const TodoContextProvider = ({children}) => {
   const [todoList, setTodoList] = useState([]);
+  const [filterTagList, setFilterTagList] = useState([]);
 
   useEffect(() => {
     getTodoList();
@@ -69,13 +70,32 @@ const TodoContextProvider = ({children}) => {
     return success;
   };
 
-  const tagFilterTodo = tag => {
-    
-  }
+  const manageTagList = (tag, state) => {
+    switch (state) {
+      case 'delete':
+        const deleteTag = filterTagList.filter(filterTag => filterTag !== tag);
+        setFilterTagList(deleteTag);
+        break;
+      case 'add':
+        if (filterTagList.includes(tag)) break;
+        setFilterTagList(prevTagList => [...prevTagList, tag]);
+        break;
+      default:
+        return;
+    }
+  };
 
   return (
     <TodoContext.Provider
-      value={{todoList, addTodo, deleteTodo, updateTodo, checkTodo}}>
+      value={{
+        todoList,
+        filterTagList,
+        addTodo,
+        deleteTodo,
+        updateTodo,
+        checkTodo,
+        manageTagList,
+      }}>
       {children}
     </TodoContext.Provider>
   );
