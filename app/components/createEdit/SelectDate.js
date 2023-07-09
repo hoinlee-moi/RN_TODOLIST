@@ -8,10 +8,11 @@ import {isPastDate} from '../../util/date';
 import ImageButton from '../ui/ImageButton';
 import Date from './Date';
 
-const SelectDate = ({addInputHandler}) => {
-  const [date, setDate] = useState('');
+const SelectDate = ({addInputHandler,defaultDate}) => {
+  const [date, setDate] = useState(defaultDate);
   const [errorState, setErrorState] = useState(false);
   const [datePickerVisible, setDatePickerVisible] = useState();
+
 
   const visibleDatePicker = () => {
     setErrorState(false);

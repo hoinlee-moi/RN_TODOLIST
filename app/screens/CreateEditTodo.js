@@ -15,9 +15,23 @@ const CreateEditTodo = ({route, navigation}) => {
     todoItem => todoItem.id === editItemId,
   );
 
+  const onSubmit = todoData => {
+    if (isEditing) {
+      todoCtx.updateTodo(editItemId, todoData);
+      navigation.goBack();
+      return;
+    }
+    todoCtx.addTodo(todoData);
+    navigation.goBack();
+  };
+
   return (
     <View style={styles.screen}>
-      <TodoForm isEditing={isEditing} defalutValue={selectTodoItem} />
+      <TodoForm
+        isEditing={isEditing}
+        defalutValue={selectTodoItem}
+        onSubmit={onSubmit}
+      />
     </View>
   );
 };

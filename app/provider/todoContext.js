@@ -85,7 +85,7 @@ const TodoContextProvider = ({children}) => {
 
   const addTodo = async todoData => {
     const id = new Date().toString() + getRandom(1, 100).toString();
-    const newTodo = {id: id, check: false, ...todoData};
+    const newTodo = {id: id, ...todoData};
     const newState = [newTodo, ...todoData];
     const success = await manageStorageMiddleWare(newState);
     return success;

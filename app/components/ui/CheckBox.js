@@ -2,8 +2,9 @@ import {Pressable, View, Image, Text, StyleSheet} from 'react-native';
 import {images} from '../../constants/images';
 
 const CheckBox = ({checked, onPress, style}) => {
+  const pressHandler = () => onPress(!checked);
   return (
-    <Pressable onPress={onPress}>
+    <Pressable onPress={pressHandler}>
       <View style={style}>
         {checked && <Image source={images.checkBox} style={styles.image} />}
       </View>

@@ -1,14 +1,15 @@
 import {useState} from 'react';
-import {View, TextInput, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 
 import {GlobalStyle} from '../../constants/styles';
 import TagList from '../list/TagList';
+import CheckBox from '../ui/CheckBox';
 import DefalutButton from '../ui/DefaultButton';
 import ModalComponent from '../ui/ModalComponent';
 import Input from './Input';
 import SelectDate from './SelectDate';
 
-const TodoForm = ({isEditing, defalutValue}) => {
+const TodoForm = ({isEditing, defalutValue, onSubmit}) => {
   const [inputValue, setInputValue] = useState({
     content: defalutValue ? defalutValue.content : '',
     date: defalutValue ? defalutValue.date : '',
@@ -16,8 +17,10 @@ const TodoForm = ({isEditing, defalutValue}) => {
     check: defalutValue ? defalutValue.check : false,
   });
   const [inputModalState, setInputModalState] = useState(false);
+  const [errorState, setErrorState] = useState(false);
 
   const inputChangeHandle = (inputName, value) => {
+    if (errorState) setErrorState(false);
     setInputValue(prevInputValue => {
       return {
         ...prevInputValue,
@@ -28,60 +31,97 @@ const TodoForm = ({isEditing, defalutValue}) => {
   const tagInputModalVisible = () =>
     setInputModalState(prevState => !prevState);
 
-  const tagInputChangeHandler = tagName => {
-    if (inputValue.tag.includes(tagName)||inputValue.tag.length>=10) return;
-    setInputValue(prevInputValue => {
-      return {
-        ...prevInputValue,
-        ['tag']: [...prevInputValue.tag, tagName],
-      };
-    });
+  const tagInputChangeHandler = (state, tagName) => {
+    switch (state) {
+      case 'add':
+        if (inputValue.tag.includes(tagName) || inputValue.tag.length >= 10)
+          return;
+        setInputValue(prevInputValue => {
+          return {
+            ...prevInputValue,
+            ['tag']: [...prevInputValue.tag, tagName],
+          };
+        });
+        break;
+      case 'delete':
+        const newTagList = inputValue.tag.filter(tag => tag !== tagName);
+        setInputValue(prevInputValue => {
+          return {
+            ...prevInputValue,
+            ['tag']: [...newTagList],
+          };
+        });
+      default:
+        break;
+    }
   };
-  const tagDeleteHandler = tagName => {
-    const newTagList = inputValue.tag.filter(tag => tag !== tagName);
-    setInputValue(prevInputValue => {
-      return {
-        ...prevInputValue,
-        ['tag']: [...newTagList],
-      };
-    });
+
+  const onSubmitHandler = () => {
+    if (inputValue.date === '' || inputValue.content.trim().length < 1) {
+      setErrorState(true);
+      return;
+    }
+    onSubmit();
   };
+
   return (
     <>
-      <SelectDate addInputHandler={inputChangeHandle} />
+      <SelectDate
+        addInputHandler={inputChangeHandle}
+        defaultDate={inputValue.date}
+      />
       <View style={styles.formContainer}>
-        <Input
-          style={styles.inputContainer}
-          textInputConfig={{
-            placeholder: '할 일을 입력해주세요',
-            onChangeText: inputChangeHandle.bind(this, 'content'),
-            maxLength: 70,
-          }}
-        />
-        <View>
-          <TagList
-            tag={inputValue.tag}
-            onPress={tagDeleteHandler}
-            style={styles.tagContainer}
+        <View style={styles.inputContainer}>
+          {isEditing && (
+            <CheckBox
+              checked={inputValue.check}
+              style={styles.checkBoxContainer}
+              onPress={inputChangeHandle.bind(this, 'check')}
+            />
+          )}
+          <Input
+            style={styles.inputBox}
+            textInputConfig={{
+              placeholder: '할 일을 입력해주세요',
+              onChangeText: inputChangeHandle.bind(this, 'content'),
+              maxLength: 70,
+              value: inputValue.content,
+            }}
           />
         </View>
-        <View>
-          <DefalutButton
-            onPress={tagInputModalVisible}
-            style={styles.tagInputButton}
-            textStyle={styles.buttonText}>
-            태그추가
-          </DefalutButton>
-        </View>
-
+        <TagList
+          tag={inputValue.tag}
+          onPress={tagInputChangeHandler.bind(this, 'delete')}
+          style={styles.tagContainer}
+        />
+        <DefalutButton
+          onPress={tagInputModalVisible}
+          style={styles.tagInputButton}
+          textStyle={styles.buttonText}>
+          태그추가
+        </DefalutButton>
         <ModalComponent
           isVisible={inputModalState}
           modalType="input"
           modalText="태그를 입력해주세요"
           closeModal={tagInputModalVisible}
-          handleConfirm={tagInputChangeHandler}
+          handleConfirm={tagInputChangeHandler.bind(this, 'add')}
         />
       </View>
+      {errorState && (
+        <View style={styles.errorTextContainer}>
+          <Text style={styles.errorText}>
+            날짜 혹은 내용을 입력해주세요
+          </Text>
+        </View>
+      )}
+
+      <DefalutButton
+        style={styles.submitButtonContainer}
+        textStyle={styles.submitButton}
+        onPress={onSubmitHandler}>
+        {isEditing ? '수정하기' : '추가하기'}
+      </DefalutButton>
     </>
   );
 };
@@ -99,6 +139,17 @@ const styles = StyleSheet.create({
     backgroundColor: GlobalStyle.colors.primary200,
   },
   inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkBoxContainer: {
+    width: 30,
+    height: 30,
+    marginRight: 12,
+    backgroundColor: GlobalStyle.colors.primary300,
+  },
+  inputBox: {
+    flex: 1,
     borderRadius: 8,
     backgroundColor: GlobalStyle.colors.primary100,
   },
@@ -115,5 +166,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 5,
+  },
+  errorTextContainer: {
+    marginTop: 15,
+  },
+  errorText: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: GlobalStyle.colors.error100,
+  },
+  submitButtonContainer: {
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    backgroundColor: GlobalStyle.colors.primary200,
+  },
+  submitButton: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: '#000',
   },
 });
