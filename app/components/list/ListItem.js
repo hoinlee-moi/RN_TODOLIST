@@ -9,17 +9,25 @@ const ListItem = ({id, content, date, checked, tag}) => {
     navigation.navigate('CreateEditTodo', {itemId: id});
 
   return (
-    <Pressable onPress={itemPressHandler} style={({pressed}) => pressed && styles.pressed}>
-      <View style={styles.todoItem}>
-        <View>{/* 체크박스 UI컴포넌트 */}</View>
-        <View>
-          <View>
+    <Pressable
+      onPress={itemPressHandler}
+      style={({pressed}) => pressed && styles.pressed}>
+      <View style={styles.todoItemContainer}>
+        <View style={styles.checkBoxContainer}>
+          <View></View>
+        </View>
+        <View style={styles.todoContentContainer}>
+          <View style={styles.todoWrap}>
             <Text style={styles.todoContent}>{content}</Text>
           </View>
-          <View>
-            <Text>{getFormattedDate(date)}</Text>
-          </View>
-          <View>{/* 태그 아이템 리스트 */}</View>
+          {tag.length !== 0 && (
+            <View>
+              <Text>{tag}</Text>
+            </View>
+          )}
+        </View>
+        <View style={styles.dateContainer}>
+          <Text>{getFormattedDate(date)}</Text>
         </View>
       </View>
     </Pressable>
@@ -32,13 +40,35 @@ const styles = StyleSheet.create({
   pressed: {
     opacity: 0.75,
   },
-  todoItem: {
-    padding: 12,
+  todoItemContainer: {
+    position: 'relative',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
     marginVertical: 8,
+    backgroundColor: GlobalStyle.colors.primary200,
+    borderRadius: 5,
+  },
+  checkBoxContainer: {
+    width: 26,
+    height: 25,
+    marginRight: 12,
     backgroundColor: GlobalStyle.colors.primary300,
+  },
+  todoContentContainer: {
+    marginBottom: 10,
+  },
+  todoWrap: {
+    flex: 1,
+    paddingRight: 100,
   },
   todoContent: {
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  dateContainer: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
   },
 });

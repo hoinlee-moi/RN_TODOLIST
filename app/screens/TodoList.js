@@ -36,10 +36,10 @@ const DUMMY_LIST = [
   },
   {
     id: '4',
-    content: 'todo5',
+    content: 'todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5',
     date: new Date('2021-1-5'),
     checked: false,
-    tag: ['태그1','태그2','태그3','태그4'],
+    tag: ['태그1','태그2','태그3','태그4',],
   },
 ];
 
