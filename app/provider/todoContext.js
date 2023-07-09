@@ -72,7 +72,6 @@ const TodoContextProvider = ({children}) => {
   };
 
   const manageTagList = (state, tag) => {
-    console.log(state, tag);
     switch (state) {
       case 'delete':
         const deleteTag = filterTagList.filter(filterTag => filterTag !== tag);

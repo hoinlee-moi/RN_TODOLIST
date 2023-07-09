@@ -1,25 +1,48 @@
-// export const getFormattedDate = (date) => {
-//   const today = new Date()
-//   const diff = ((today - date.getTime())/1000)
-//   console.log(diff)
-//     return `${diff.getMonth() + 1}월${diff.getDate()}일`;
-//   };
-export const getFormattedDate = (date) => {
+export const getFormattedDate = (date, limitDay) => {
+  const targetDate = new Date(date);
   const today = new Date();
-  const deadlineDate = new Date(date);
 
-  const daysRemaining = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
+  targetDate.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
 
-  if (daysRemaining < 7) {
-    return `D-${daysRemaining}`;
-  } else {
-    const formattedDate = deadlineDate.toLocaleDateString('en-US', {
-      month: 'long',
-      day: 'numeric',
-    });
-    return formattedDate;
+  const timeDiff = targetDate.getTime() - today.getTime();
+  const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+  if (daysDiff < 0) {
+    return {
+      message: `D+${Math.abs(daysDiff)}`,
+      urgent: true,
+    };
   }
+
+  if (daysDiff === 0) {
+    return {
+      message: 'D-day',
+      urgent: true,
+    };
+  }
+  
+  if (daysDiff < limitDay) {
+    return {
+      message: `D-${daysDiff}`,
+      urgent: daysDiff<=1||false,
+    };
+  }
+
+  const month = targetDate.getMonth() + 1;
+  const day = targetDate.getDate();
+  return {
+    message: `${month}월 ${day}일`,
+    urgent: false,
+  };
 };
-export const getDeadLineDate = (date,days) => {
-    return new Date()
-}
+
+export const isPastDate = date => {
+  const selectDate = new Date(date);
+  const today = new Date();
+
+  selectDate.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
+
+  return selectDate < today;
+};
+

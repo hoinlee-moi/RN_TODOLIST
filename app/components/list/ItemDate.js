@@ -5,7 +5,7 @@ const ItemDate = ({date}) => {
 
   return (
     <View style={styles.dateContainer}>
-      <Text>{getFormattedDate(date)}</Text>
+      <Text>해결중</Text>
     </View>
   );
 };
