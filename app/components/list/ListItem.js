@@ -1,15 +1,15 @@
 import {useNavigation} from '@react-navigation/native';
 import {Pressable, View, Text, StyleSheet} from 'react-native';
+
 import {GlobalStyle} from '../../constants/styles';
-import {getFormattedDate} from '../../util/date';
 import CheckBox from '../ui/CheckBox';
+import ItemDate from './ItemDate';
+import ItemTagList from './ItemTagList';
 
 const ListItem = ({id, content, date, checked, tag}) => {
   const navigation = useNavigation();
   const itemPressHandler = () =>
     navigation.navigate('CreateEditTodo', {itemId: id});
-
-  
 
   return (
     <Pressable
@@ -22,14 +22,10 @@ const ListItem = ({id, content, date, checked, tag}) => {
             <Text style={styles.todoContent}>{content}</Text>
           </View>
           {tag.length !== 0 && (
-            <View>
-              <Text>{tag}</Text>
-            </View>
+            <ItemTagList tag={tag} style={styles.tagContainer} />
           )}
         </View>
-        <View style={styles.dateContainer}>
-          <Text>{getFormattedDate(date)}</Text>
-        </View>
+        <ItemDate date={date} />
       </View>
     </Pressable>
   );
@@ -67,9 +63,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  dateContainer: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
+  tagContainer: {
+    flex: 1,
+    flexWrap: 'wrap',
+    paddingRight: 100,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
   },
 });
