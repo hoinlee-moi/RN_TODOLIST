@@ -1,9 +1,12 @@
-import {View, Text, StyleSheet, Pressable} from 'react-native';
+import {useState} from 'react';
+import {View, Text, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+
 import {images} from '../constants/images';
 import ImageButton from '../components/ui/ImageButton';
 import List from '../components/list/List';
-import { GlobalStyle } from '../constants/styles';
+import {GlobalStyle} from '../constants/styles';
+import TagList from '../components/list/TagList';
 
 const DUMMY_LIST = [
   {
@@ -25,7 +28,12 @@ const DUMMY_LIST = [
     content: 'todo3',
     date: new Date('2023-3-29'),
     checked: false,
-    tag: ['장보기','오늘밥먹을것임아아아','오늘밥먹을것임아아아2','오늘밥먹을것임아아아3오늘밥먹을것임아아아3오늘밥먹을것임아아아3오늘밥먹을것임아아아3오늘밥먹을것임아아아3오늘밥먹을것임아아아3'],
+    tag: [
+      '장보기',
+      '오늘밥먹을것임아아아',
+      '오늘밥먹을것임아아아2',
+      '오늘밥먹을것임아아아3오늘밥먹을것임아아아3오늘밥먹을것임아아아3오늘밥먹을것임아아아3오늘밥먹을것임아아아3오늘밥먹을것임아아아3',
+    ],
   },
   {
     id: '3',
@@ -36,19 +44,27 @@ const DUMMY_LIST = [
   },
   {
     id: '4',
-    content: 'todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5',
+    content:
+      'todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5',
     date: new Date('2021-1-5'),
     checked: false,
-    tag: ['태그1','태그2','태그3','태그4',],
+    tag: ['태그1', '태그2', '태그3', '태그4'],
   },
 ];
 
 const TodoList = () => {
   const navigation = useNavigation();
+  const [tagList, setTagList] = useState(['태그1', '태그2', '태그3', '태그4']);
   const cancelHandler = () => navigation.navigate('CreateEditTodo');
 
   return (
     <View style={styles.screen}>
+      <View style={styles.tagContainer}>
+        <View style={styles.tagTitleBox}>
+          <Text style={styles.tagTitle}>Tag :</Text>
+        </View>
+        <TagList tag={tagList} style={styles.tagNameContainer} />
+      </View>
       <List list={DUMMY_LIST} />
       <ImageButton
         name={images.add}
@@ -74,5 +90,31 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     overflow: 'hidden',
+  },
+  tagContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    minHeight: 30,
+    marginHorizontal: 15,
+    marginTop: 15,
+    borderRadius:5,
+    backgroundColor: GlobalStyle.colors.primary200,
+  },
+  tagTitleBox: {
+    paddingVertical: 3,
+    paddingHorizontal: 5,
+  },
+  tagTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  tagNameContainer: {
+    flex: 1,
+    flexWrap: 'wrap',
+    paddingRight: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
   },
 });

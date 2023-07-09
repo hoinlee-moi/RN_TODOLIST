@@ -20,7 +20,7 @@ export default List;
 const styles = StyleSheet.create({
   listContainer: {
     paddingTop: 15,
-    paddingBottom: 20,
+    paddingBottom: 130,
   },
   list: {
     paddingHorizontal: 15,

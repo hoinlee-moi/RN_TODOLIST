@@ -4,7 +4,7 @@ import {Pressable, View, Text, StyleSheet} from 'react-native';
 import {GlobalStyle} from '../../constants/styles';
 import CheckBox from '../ui/CheckBox';
 import ItemDate from './ItemDate';
-import ItemTagList from './ItemTagList';
+import TagList from './TagList';
 
 const ListItem = ({id, content, date, checked, tag}) => {
   const navigation = useNavigation();
@@ -22,7 +22,7 @@ const ListItem = ({id, content, date, checked, tag}) => {
             <Text style={styles.todoContent}>{content}</Text>
           </View>
           {tag.length !== 0 && (
-            <ItemTagList tag={tag} style={styles.tagContainer} />
+            <TagList tag={tag} style={styles.tagContainer} />
           )}
         </View>
         <ItemDate date={date} />
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     paddingRight: 100,
   },
   todoContent: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
   },
   tagContainer: {
