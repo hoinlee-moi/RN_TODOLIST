@@ -2,20 +2,21 @@ import {useNavigation} from '@react-navigation/native';
 import {Pressable, View, Text, StyleSheet} from 'react-native';
 import {GlobalStyle} from '../../constants/styles';
 import {getFormattedDate} from '../../util/date';
+import CheckBox from '../ui/CheckBox';
 
 const ListItem = ({id, content, date, checked, tag}) => {
   const navigation = useNavigation();
   const itemPressHandler = () =>
     navigation.navigate('CreateEditTodo', {itemId: id});
 
+  
+
   return (
     <Pressable
       onPress={itemPressHandler}
       style={({pressed}) => pressed && styles.pressed}>
       <View style={styles.todoItemContainer}>
-        <View style={styles.checkBoxContainer}>
-          <View></View>
-        </View>
+        <CheckBox checked={checked} style={styles.checkBoxContainer} />
         <View style={styles.todoContentContainer}>
           <View style={styles.todoWrap}>
             <Text style={styles.todoContent}>{content}</Text>
