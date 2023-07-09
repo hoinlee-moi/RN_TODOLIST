@@ -6,5 +6,6 @@ export const GlobalStyle = {
     primary400: '#A0C49D',
     error100: '#F54646',
     gray500: '#999999',
+    confirm : '#0D99F6'
   },
 };
