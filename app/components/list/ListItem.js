@@ -1,21 +1,25 @@
-import {Pressable, View, Text,StyleSheet} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {Pressable, View, Text, StyleSheet} from 'react-native';
 import {GlobalStyle} from '../../constants/styles';
-import { getFormattedDate } from '../../util/date';
+import {getFormattedDate} from '../../util/date';
 
 const ListItem = ({id, content, date, checked, tag}) => {
+  const navigation = useNavigation();
+  const itemPressHandler = () =>
+    navigation.navigate('CreateEditTodo', {itemId: id});
 
   return (
-    <Pressable style={({pressed}) => pressed && styles.pressed}>
+    <Pressable onPress={itemPressHandler} style={({pressed}) => pressed && styles.pressed}>
       <View style={styles.todoItem}>
         <View>{/* 체크박스 UI컴포넌트 */}</View>
         <View>
-          <Text style={styles.todoContent}>{content}</Text>
-        </View>
-        <View>
-          <Text>{getFormattedDate(date)}</Text>
-        </View>
-        <View>
-            {/* 태그 아이템 리스트 */}
+          <View>
+            <Text style={styles.todoContent}>{content}</Text>
+          </View>
+          <View>
+            <Text>{getFormattedDate(date)}</Text>
+          </View>
+          <View>{/* 태그 아이템 리스트 */}</View>
         </View>
       </View>
     </Pressable>
@@ -33,8 +37,8 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     backgroundColor: GlobalStyle.colors.primary300,
   },
-  todoContent:{
+  todoContent: {
     fontSize: 18,
-    fontWeight:'bold'
-  }
+    fontWeight: 'bold',
+  },
 });

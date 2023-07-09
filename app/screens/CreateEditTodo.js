@@ -1,5 +1,7 @@
 import {View, Text, StyleSheet} from 'react-native';
-const CreateEditTodo = () => {
+const CreateEditTodo = ({route, navigation}) => {
+  const editItemId = route?.params?.itemId;
+  console.log(editItemId);
   return (
     <View style={styles.screen}>
       <Text>CreateEditTodo</Text>
