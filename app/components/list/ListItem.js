@@ -1,4 +1,4 @@
-import {useContext, useRef} from 'react';
+import {useContext, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {Pressable, View, Text, StyleSheet, Animated, Alert} from 'react-native';
 
@@ -10,18 +10,33 @@ import Date from '../createEdit/Date';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import ImageButton from '../ui/ImageButton';
 import {images} from '../../constants/images';
+import ModalComponent from '../ui/ModalComponent';
 
 const ListItem = ({id, content, date, check, tag}) => {
   const todoCtx = useContext(TodoContext);
+  const navigation = useNavigation();
+  const [deleteModalState, setDeleteModalState] = useState(false);
+
   const swipeAnimation = useRef(new Animated.Value(0)).current;
   const buttonSwipeAnimation = useRef(new Animated.Value(0)).current;
-  const navigation = useNavigation();
   const {SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
+
+  const checkBoxPressHandler = () => todoCtx.checkTodo(id);
 
   const itemPressHandler = () =>
     navigation.navigate('CreateEditTodo', {itemId: id});
 
-  const checkBoxPressHandler = () => todoCtx.checkTodo(id);
+  const deleteModalVisible = () => setDeleteModalState(prevState => !prevState);
+
+  const onDeleteHandler = async () => {
+    try {
+      await todoCtx.deleteTodo(id);
+    } catch (error) {
+      Alert.alert('Error!', 'Internal Server error', [
+        {text: 'Sorry!', style: 'cancel'},
+      ]);
+    }
+  };
 
   const figureHorizontalDirection = delta =>
     delta > 0 ? SWIPE_RIGHT : SWIPE_LEFT;
@@ -50,55 +65,54 @@ const ListItem = ({id, content, date, check, tag}) => {
     swipeHandler(buttonSwipeAnimation, 100);
   };
 
-  const deleteButtonPressHandler = async () => {
-    try {
-      await todoCtx.deleteTodo(id);
-    } catch (error) {
-      Alert.alert('Error!', 'Internal Server error', [
-        {text: 'Sorry!', style: 'cancel'},
-      ]);
-    }
-  };
-
   return (
-    <GestureRecognizer onSwipe={onSwipeHandler}>
-      <Pressable
-        onPress={itemPressHandler}
-        style={({pressed}) => pressed && styles.pressed}>
-        <Animated.View style={[{transform: [{translateX: swipeAnimation}]}]}>
-          <View style={styles.todoItemContainer}>
-            <CheckBox
-              checked={check}
-              style={styles.checkBoxContainer}
-              onPress={checkBoxPressHandler}
-            />
-            <View style={styles.todoContentContainer}>
-              <View style={styles.todoWrap}>
-                <Text style={styles.todoContent}>{content}</Text>
+    <>
+      <GestureRecognizer onSwipe={onSwipeHandler}>
+        <Pressable
+          onPress={itemPressHandler}
+          style={({pressed}) => pressed && styles.pressed}>
+          <Animated.View style={[{transform: [{translateX: swipeAnimation}]}]}>
+            <View style={styles.todoItemContainer}>
+              <CheckBox
+                checked={check}
+                style={styles.checkBoxContainer}
+                onPress={checkBoxPressHandler}
+              />
+              <View style={styles.todoContentContainer}>
+                <View style={styles.todoWrap}>
+                  <Text style={styles.todoContent}>{content}</Text>
+                </View>
+                {tag && (
+                  <TagList
+                    tag={tag}
+                    style={styles.tagContainer}
+                    onPress={todoCtx.manageTagList.bind(this, 'add')}
+                  />
+                )}
               </View>
-              {tag && (
-                <TagList
-                  tag={tag}
-                  style={styles.tagContainer}
-                  onPress={todoCtx.manageTagList.bind(this, 'add')}
-                />
-              )}
+              <Date date={date} style={styles.dateContainer} />
+              <Animated.View
+                style={{transform: [{translateX: buttonSwipeAnimation}]}}>
+                <View>
+                  <ImageButton
+                    style={styles.swipeDeleteButton}
+                    name={images.delete}
+                    onPress={deleteModalVisible}
+                  />
+                </View>
+              </Animated.View>
             </View>
-            <Date date={date} style={styles.dateContainer} />
-            <Animated.View
-              style={{transform: [{translateX: buttonSwipeAnimation}]}}>
-              <View>
-                <ImageButton
-                  style={styles.swipeDeleteButton}
-                  name={images.delete}
-                  onPress={deleteButtonPressHandler}
-                />
-              </View>
-            </Animated.View>
-          </View>
-        </Animated.View>
-      </Pressable>
-    </GestureRecognizer>
+          </Animated.View>
+        </Pressable>
+      </GestureRecognizer>
+      <ModalComponent
+        isVisible={deleteModalState}
+        closeModal={deleteModalVisible}
+        modalType="alert"
+        modalText="정말 삭제하시겠습니까?"
+        handleConfirm={onDeleteHandler}
+      />
+    </>
   );
 };
 

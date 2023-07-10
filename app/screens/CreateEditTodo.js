@@ -2,9 +2,7 @@ import {useContext, useState} from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
 
 import TodoForm from '../components/createEdit/TodoForm';
-import ImageButton from '../components/ui/ImageButton';
 import ModalComponent from '../components/ui/ModalComponent';
-import {images} from '../constants/images';
 import {GlobalStyle} from '../constants/styles';
 import {TodoContext} from '../provider/todoContext';
 
