@@ -9,7 +9,7 @@ export const getStorageTodoList = async () => {
     return null;
   }
 };
-
+// setItem은 덮어 쓰는 것이여서 edit,create,delete,update 모두 동일 로직 처리
 export const manageStorageTodo = async todoList => {
   try {
     const data = JSON.stringify(todoList);

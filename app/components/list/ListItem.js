@@ -1,4 +1,4 @@
-import {useContext, useRef, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {Pressable, View, Text, StyleSheet, Animated, Alert} from 'react-native';
 
@@ -17,10 +17,12 @@ const ListItem = ({id, content, date, check, tag}) => {
   const navigation = useNavigation();
   const [deleteModalState, setDeleteModalState] = useState(false);
 
+  // swipe 로직을 위한 useRef 고정값과 라이브러리의 상태값(SWIPE_LEFT...)
   const swipeAnimation = useRef(new Animated.Value(0)).current;
   const buttonSwipeAnimation = useRef(new Animated.Value(0)).current;
   const {SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
 
+  //체크박스 로직
   const checkBoxPressHandler = () => todoCtx.checkTodo(id);
 
   const itemPressHandler = () =>
@@ -28,6 +30,7 @@ const ListItem = ({id, content, date, check, tag}) => {
 
   const deleteModalVisible = () => setDeleteModalState(prevState => !prevState);
 
+  //삭제 모달 확인시 실행
   const onDeleteHandler = async () => {
     try {
       await todoCtx.deleteTodo(id);
@@ -38,12 +41,16 @@ const ListItem = ({id, content, date, check, tag}) => {
     }
   };
 
+  //x 이동거리 값이 -로 갈경우 왼쪽 그반대 오른쪽
   const figureHorizontalDirection = delta =>
     delta > 0 ? SWIPE_RIGHT : SWIPE_LEFT;
+
+    //swipe시 이동 값을 x,y값으로 받아 방향 판단 x값이 크다는 건 x축 이동
   const detectSwipeDirection = ({dx, dy}) => {
     return Math.abs(dx) > Math.abs(dy) && figureHorizontalDirection(dx);
   };
 
+  //animated 사용 로직 value로 이동값
   const swipeHandler = (target, swipeValue) => {
     Animated.timing(target, {
       toValue: swipeValue,
@@ -52,6 +59,7 @@ const ListItem = ({id, content, date, check, tag}) => {
     }).start();
   };
 
+  //라이브러리 내의 onSwipe 함수를 통해 swipe 애니메이션 구현 로직 
   const onSwipeHandler = (directionNull, gestureState) => {
     const {dx, dy} = gestureState;
     const direction = detectSwipeDirection({dx, dy});
@@ -116,7 +124,7 @@ const ListItem = ({id, content, date, check, tag}) => {
   );
 };
 
-export default ListItem;
+export default React.memo(ListItem);
 
 const styles = StyleSheet.create({
   pressed: {

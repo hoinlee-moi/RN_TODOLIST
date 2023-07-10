@@ -1,4 +1,4 @@
-import { Image, Pressable, StyleSheet} from 'react-native';
+import {Image, Pressable, StyleSheet} from 'react-native';
 
 const ImageButton = ({name, onPress, style}) => {
   return (

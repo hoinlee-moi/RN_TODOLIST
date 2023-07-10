@@ -20,7 +20,8 @@ const TodoForm = ({isEditing, defalutValue, onSubmit, onDelete}) => {
   });
   const [inputModalState, setInputModalState] = useState(false);
   const [errorState, setErrorState] = useState(false);
-
+  
+// input값 변경 name으로 통제(bind를 통해 name값 전달)
   const inputChangeHandle = (inputName, value) => {
     if (errorState) setErrorState(false);
     setInputValue(prevInputValue => {
@@ -30,9 +31,12 @@ const TodoForm = ({isEditing, defalutValue, onSubmit, onDelete}) => {
       };
     });
   };
+
+  //태그 저장 모달 
   const tagInputModalVisible = () =>
     setInputModalState(prevState => !prevState);
 
+  //태그 저장 및 삭제 로직
   const tagInputChangeHandler = (state, tagName) => {
     switch (state) {
       case 'add':

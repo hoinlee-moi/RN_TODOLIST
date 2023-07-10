@@ -60,6 +60,7 @@ const TodoContextProvider = ({children}) => {
   };
   //삭제 함수
   const deleteTodo = async id => {
+
     const deleteTodoList = todoList.filter(todo => todo.id !== id);
     const success = await manageStorageMiddleWare(deleteTodoList);
     return success;

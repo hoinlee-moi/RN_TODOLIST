@@ -12,12 +12,14 @@ const SelectDate = ({addInputHandler, defaultDate}) => {
   const [date, setDate] = useState(defaultDate);
   const [errorState, setErrorState] = useState(false);
   const [datePickerVisible, setDatePickerVisible] = useState();
-
+  
+// 달력 출력
   const visibleDatePicker = () => {
     setErrorState(false);
     setDatePickerVisible(prevState => !prevState);
   };
 
+//달력 날짜 받아서 유효성 검사 후 저장
   const handleConfirm = date => {
     const isPast = isPastDate(date);
     visibleDatePicker();

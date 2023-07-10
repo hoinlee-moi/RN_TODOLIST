@@ -10,21 +10,25 @@ const CreateEditTodo = ({route, navigation}) => {
   const todoCtx = useContext(TodoContext);
   const [deleteModalState, setDeleteModalState] = useState(false);
 
+  // route.params를 통해 create,edit 분별하기
   const editItemId = route?.params?.itemId;
   const isEditing = editItemId ? true : false;
 
+  // edit일시 해당 list 찾기 없을경우 undefined 그대로 전달
   const selectTodoItem = todoCtx.todoList.find(
     todoItem => todoItem.id === editItemId,
   );
 
   const deleteModalVisible = () => setDeleteModalState(prevState => !prevState);
 
+  // 중복 alert 창 처리 로직
   const failAlertModal = () => {
     Alert.alert('Error!', 'Internal Server error', [
       {text: 'Sorry!', style: 'cancel'},
     ]);
   };
 
+  //create&edit
   const onSubmitHandler = async todoData => {
     if (isEditing) {
       try {
@@ -43,7 +47,7 @@ const CreateEditTodo = ({route, navigation}) => {
       }
     }
   };
-
+  //delete 모달 창 통해서 실행
   const onDeleteHandler = async () => {
     const success = await todoCtx.deleteTodo(editItemId);
     if (success) {

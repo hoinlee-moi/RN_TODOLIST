@@ -9,19 +9,16 @@ import {GlobalStyle} from '../constants/styles';
 import TagList from '../components/list/TagList';
 import {TodoContext} from '../provider/todoContext';
 
-
 const TodoList = () => {
   const navigation = useNavigation();
   const todoCtx = useContext(TodoContext);
+  const createPageNavigation = () => navigation.navigate('CreateEditTodo');
 
-  const cancelHandler = () => navigation.navigate('CreateEditTodo');
-
+  //tag 개수 확인으로 띄울 list 구별
   const todoList =
     todoCtx.filteredTags.length === 0
       ? todoCtx.todoList
       : todoCtx.filteringTodoList;
-
-
 
   return (
     <View style={styles.screen}>
@@ -35,13 +32,12 @@ const TodoList = () => {
           onPress={todoCtx.manageTagList.bind(this, 'delete')}
         />
       </View>
-      <List list={todoList}/>
+      <List list={todoList} />
       <ImageButton
         name={images.add}
         style={styles.buttonContainer}
-        onPress={cancelHandler}
+        onPress={createPageNavigation}
       />
-
     </View>
   );
 };
