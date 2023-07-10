@@ -5,20 +5,26 @@ import {Pressable, View, Text, StyleSheet} from 'react-native';
 import {GlobalStyle} from '../../constants/styles';
 import {TodoContext} from '../../provider/todoContext';
 import CheckBox from '../ui/CheckBox';
-import ItemDate from './ItemDate';
 import TagList from './TagList';
+import Date from '../createEdit/Date';
 
 const ListItem = ({id, content, date, check, tag}) => {
   const todoCtx = useContext(TodoContext);
   const navigation = useNavigation();
   const itemPressHandler = () =>
     navigation.navigate('CreateEditTodo', {itemId: id});
+
+  const checkBoxPressHandler = () => todoCtx.checkTodo(id);
   return (
     <Pressable
       onPress={itemPressHandler}
       style={({pressed}) => pressed && styles.pressed}>
       <View style={styles.todoItemContainer}>
-        <CheckBox checked={check} style={styles.checkBoxContainer} />
+        <CheckBox
+          checked={check}
+          style={styles.checkBoxContainer}
+          onPress={checkBoxPressHandler}
+        />
         <View style={styles.todoContentContainer}>
           <View style={styles.todoWrap}>
             <Text style={styles.todoContent}>{content}</Text>
@@ -31,7 +37,7 @@ const ListItem = ({id, content, date, check, tag}) => {
             />
           )}
         </View>
-        <ItemDate date={date} />
+        <Date date={date} style={styles.dateContainer} />
       </View>
     </Pressable>
   );
@@ -77,5 +83,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 5,
+  },
+  dateContainer: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
   },
 });
