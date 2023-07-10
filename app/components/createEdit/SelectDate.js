@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Pressable} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 import {images} from '../../constants/images';
@@ -8,11 +8,10 @@ import {isPastDate} from '../../util/date';
 import ImageButton from '../ui/ImageButton';
 import Date from './Date';
 
-const SelectDate = ({addInputHandler,defaultDate}) => {
+const SelectDate = ({addInputHandler, defaultDate}) => {
   const [date, setDate] = useState(defaultDate);
   const [errorState, setErrorState] = useState(false);
   const [datePickerVisible, setDatePickerVisible] = useState();
-
 
   const visibleDatePicker = () => {
     setErrorState(false);
@@ -27,25 +26,27 @@ const SelectDate = ({addInputHandler,defaultDate}) => {
       return;
     }
     setDate(date);
-    addInputHandler('date',date)
+    addInputHandler('date', date);
   };
 
   return (
     <View style={styles.selectDateContainer}>
-      <View style={styles.selectContainer}>
-        <ImageButton
-          name={images.checkDate}
-          style={styles.imageButtonContainer}
-          onPress={visibleDatePicker}
-        />
-        <Date style={styles.dateContainer} date={date} />
-        <DateTimePickerModal
-          isVisible={datePickerVisible}
-          mode="date"
-          onConfirm={handleConfirm}
-          onCancel={visibleDatePicker}
-        />
-      </View>
+      <Pressable onPress={visibleDatePicker} style={({pressed})=>pressed&&styles.pressed}>
+        <View style={styles.selectContainer}>
+          <ImageButton
+            name={images.checkDate}
+            style={styles.imageButtonContainer}
+            onPress={visibleDatePicker}
+          />
+          <Date style={styles.dateContainer} date={date} />
+          <DateTimePickerModal
+            isVisible={datePickerVisible}
+            mode="date"
+            onConfirm={handleConfirm}
+            onCancel={visibleDatePicker}
+          />
+        </View>
+      </Pressable>
       <View style={styles.errorContainer}>
         <Text style={styles.errorMessage}>
           {errorState && '과거 날짜는 선택하실 수 없습니다'}
@@ -58,6 +59,9 @@ const SelectDate = ({addInputHandler,defaultDate}) => {
 export default SelectDate;
 
 const styles = StyleSheet.create({
+  pressed:{
+    opacity:0.75
+  },
   selectDateContainer: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -68,7 +72,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 150,
     height: 40,
-    borderRadius:2,
+    borderRadius: 2,
     backgroundColor: GlobalStyle.colors.primary200,
   },
   imageButtonContainer: {

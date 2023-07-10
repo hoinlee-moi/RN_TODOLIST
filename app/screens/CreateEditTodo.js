@@ -1,12 +1,16 @@
-import {useContext, useState, useLayoutEffect} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {useContext, useState} from 'react';
+import {View, StyleSheet, Alert} from 'react-native';
 
 import TodoForm from '../components/createEdit/TodoForm';
+import ImageButton from '../components/ui/ImageButton';
+import ModalComponent from '../components/ui/ModalComponent';
+import {images} from '../constants/images';
 import {GlobalStyle} from '../constants/styles';
 import {TodoContext} from '../provider/todoContext';
 
 const CreateEditTodo = ({route, navigation}) => {
   const todoCtx = useContext(TodoContext);
+  const [deleteModalState, setDeleteModalState] = useState(false);
 
   const editItemId = route?.params?.itemId;
   const isEditing = editItemId ? true : false;
@@ -15,14 +19,30 @@ const CreateEditTodo = ({route, navigation}) => {
     todoItem => todoItem.id === editItemId,
   );
 
-  const onSubmit = todoData => {
+  const deleteModalVisible = () => setDeleteModalState(prevState => !prevState);
+
+  const onSubmitHandler = async todoData => {
     if (isEditing) {
-      todoCtx.updateTodo(editItemId, todoData);
-      navigation.goBack();
-      return;
+      const success = todoCtx.updateTodo(editItemId, todoData);
+      if (success) {
+        navigation.goBack();
+        return;
+      }
+    } else {
+      const success = await todoCtx.addTodo(todoData);
+      if (success) {
+        navigation.goBack();
+        return;
+      }
     }
-    todoCtx.addTodo(todoData);
-    navigation.goBack();
+    Alert.alert('Error!', 'Internal Server error', [
+      {text: 'Sorry!', style: 'cancel'},
+    ]);
+  };
+
+  const onDeleteHandler = async () => {
+    const success = await todoCtx.deleteTodo(editItemId);
+    if (success) navigation.goBack();
   };
 
   return (
@@ -30,7 +50,14 @@ const CreateEditTodo = ({route, navigation}) => {
       <TodoForm
         isEditing={isEditing}
         defalutValue={selectTodoItem}
-        onSubmit={onSubmit}
+        onSubmit={onSubmitHandler}
+      />
+      <ModalComponent
+        isVisible={deleteModalState}
+        closeModal={deleteModalVisible}
+        modalType="alert"
+        modalText="정말 삭제하시겠습니까?"
+        handleConfirm={onDeleteHandler}
       />
     </View>
   );

@@ -1,4 +1,3 @@
-import {useContext} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
@@ -6,14 +5,10 @@ import CreateEditTodo from '../screens/CreateEditTodo';
 import TodoList from '../screens/TodoList';
 import IconButton from '../components/ui/IconButton';
 import {GlobalStyle} from '../constants/styles';
-import {TodoContext} from '../provider/todoContext';
-import ImageButton from '../components/ui/ImageButton';
-import {images} from '../constants/images';
 
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
-  const todoCtx = useContext(TodoContext);
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -40,13 +35,6 @@ const Navigation = () => {
                 size={20}
                 color={GlobalStyle.colors.primary400}
                 onPress={() => navigation.navigate('TodoList')}
-              />
-            ),
-            headerRight: () => (
-              <ImageButton
-                name={images.delete}
-                onPress={todoCtx.deleteTodo}
-                style={{width: 25, height: 25}}
               />
             ),
           })}

@@ -3,20 +3,34 @@ import {View, Modal, TextInput, Text, StyleSheet} from 'react-native';
 import {GlobalStyle} from '../../constants/styles';
 import DefalutButton from './DefaultButton';
 
-const ModalComponent = ({isVisible, closeModal, modalType, handleConfirm,modalText}) => {
+const ModalComponent = ({
+  isVisible,
+  closeModal,
+  modalType,
+  handleConfirm,
+  modalText,
+}) => {
   const [inputValue, setInputValue] = useState('');
 
-  const handleInputChange = text => {
-    setInputValue(text);
-  };
-
+  const handleInputChange = text => setInputValue(text);
   const handleConfirmClick = () => {
-    if (inputValue.trim().length < 1) {
-      closeModal();
-      return;
+    switch (modalType) {
+      case 'input':
+        if (inputValue.trim().length < 1) {
+          closeModal();
+          return;
+        }
+        handleConfirm(inputValue);
+        closeModal();
+        break;
+      case 'alert':
+        handleConfirm();
+        closeModal();
+        break;
+      default:
+        closeModal();
+        break;
     }
-    handleConfirm(inputValue);
-    closeModal();
   };
 
   return (
@@ -31,7 +45,7 @@ const ModalComponent = ({isVisible, closeModal, modalType, handleConfirm,modalTe
               maxLength={30}
             />
           )}
-          {modalType === 'alert' &&(<Text>{modalText}</Text>)}
+          {modalType === 'alert' && <Text>{modalText}</Text>}
           <View style={styles.buttonContainer}>
             <DefalutButton
               textStyle={[styles.button, styles.confirmButton]}
@@ -68,7 +82,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     paddingHorizontal: 10,
-    borderRadius:5,
+    borderRadius: 5,
     backgroundColor: GlobalStyle.colors.primary100,
   },
   buttonContainer: {

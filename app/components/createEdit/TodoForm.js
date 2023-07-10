@@ -1,15 +1,17 @@
 import {useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
+import {images} from '../../constants/images';
 import {GlobalStyle} from '../../constants/styles';
 import TagList from '../list/TagList';
 import CheckBox from '../ui/CheckBox';
 import DefalutButton from '../ui/DefaultButton';
+import ImageButton from '../ui/ImageButton';
 import ModalComponent from '../ui/ModalComponent';
 import Input from './Input';
 import SelectDate from './SelectDate';
 
-const TodoForm = ({isEditing, defalutValue, onSubmit}) => {
+const TodoForm = ({isEditing, defalutValue, onSubmit, onDelete}) => {
   const [inputValue, setInputValue] = useState({
     content: defalutValue ? defalutValue.content : '',
     date: defalutValue ? defalutValue.date : '',
@@ -110,18 +112,22 @@ const TodoForm = ({isEditing, defalutValue, onSubmit}) => {
       </View>
       {errorState && (
         <View style={styles.errorTextContainer}>
-          <Text style={styles.errorText}>
-            날짜 혹은 내용을 입력해주세요
-          </Text>
+          <Text style={styles.errorText}>날짜 혹은 내용을 입력해주세요</Text>
         </View>
       )}
-
-      <DefalutButton
-        style={styles.submitButtonContainer}
-        textStyle={styles.submitButton}
-        onPress={onSubmitHandler}>
-        {isEditing ? '수정하기' : '추가하기'}
-      </DefalutButton>
+      <View style={styles.buttonContainer}>
+        <DefalutButton
+          style={styles.submitButtonContainer}
+          textStyle={styles.submitButton}
+          onPress={onSubmitHandler}>
+          {isEditing ? '수정하기' : '추가하기'}
+        </DefalutButton>
+        <ImageButton
+          name={images.delete}
+          onPress={onDelete}
+          style={styles.deleteButtonContainer}
+        />
+      </View>
     </>
   );
 };
@@ -159,7 +165,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#000',
+    color: GlobalStyle.colors.gray500,
   },
   tagContainer: {
     flexWrap: 'wrap',
@@ -175,8 +181,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: GlobalStyle.colors.error100,
   },
-  submitButtonContainer: {
+  buttonContainer: {
+    width: '50%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginTop: 20,
+  },
+  submitButtonContainer: {
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 8,
@@ -186,5 +198,9 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: 'bold',
     color: '#000',
+  },
+  deleteButtonContainer: {
+    width: 35,
+    height: 35,
   },
 });
