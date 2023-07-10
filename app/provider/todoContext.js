@@ -2,11 +2,9 @@ import {createContext, useEffect, useState} from 'react';
 import {getRandom} from '../util/calculator';
 import {getStorageTodoList, manageStorageTodo} from './storage';
 
-
 export const TodoContext = createContext({
   todoList: [],
   filteredTags: [],
-  inItTodo:()=>{},
   addTodo: ({content, date, tag}) => {},
   deleteTodo: id => {},
   updateTodo: (id, {content, date, tag}) => {},
@@ -16,7 +14,13 @@ export const TodoContext = createContext({
 
 const TodoContextProvider = ({children}) => {
   const [todoList, setTodoList] = useState([]);
+  const [filteringTodoList, setFilteringTodoList] = useState([]);
   const [filteredTags, setFilteredTags] = useState([]);
+
+  useEffect(() => {
+    getTodoList();
+  }, []);
+
 
 
   const getTodoList = async () => {
@@ -38,9 +42,9 @@ const TodoContextProvider = ({children}) => {
     return sortList;
   };
 
-  const addTodo = async (todoData) => {
+  const addTodo = async todoData => {
     const id = new Date().toString() + getRandom(1, 10000).toString();
-    
+
     const newTodo = {id: id, ...todoData};
     const newState = [newTodo, ...todoList];
     const success = await manageStorageMiddleWare(newState);
@@ -88,7 +92,6 @@ const TodoContextProvider = ({children}) => {
   const value = {
     todoList: todoList,
     filteredTags: filteredTags,
-    inItTodo:getTodoList,
     addTodo: addTodo,
     deleteTodo: deleteTodo,
     updateTodo: updateTodo,

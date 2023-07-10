@@ -14,10 +14,9 @@ const TodoList = () => {
   const navigation = useNavigation();
   const todoCtx = useContext(TodoContext);
   const cancelHandler = () => navigation.navigate('CreateEditTodo');
+   
+    
 
-  useEffect(() => {
-    todoCtx.inItTodo();
-  }, []);
   return (
     <View style={styles.screen}>
       <View style={styles.tagContainer}>
