@@ -1,4 +1,4 @@
-import {useContext} from 'react';
+import {useContext, useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
@@ -10,13 +10,14 @@ import TagList from '../components/list/TagList';
 import {TodoContext} from '../provider/todoContext';
 
 
-
 const TodoList = () => {
   const navigation = useNavigation();
   const todoCtx = useContext(TodoContext);
   const cancelHandler = () => navigation.navigate('CreateEditTodo');
 
-
+  useEffect(() => {
+    todoCtx.inItTodo();
+  }, []);
 
   return (
     <View style={styles.screen}>

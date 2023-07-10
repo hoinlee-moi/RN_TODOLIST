@@ -6,6 +6,7 @@ import {getStorageTodoList, manageStorageTodo} from './storage';
 export const TodoContext = createContext({
   todoList: [],
   filteredTags: [],
+  inItTodo:()=>{},
   addTodo: ({content, date, tag}) => {},
   deleteTodo: id => {},
   updateTodo: (id, {content, date, tag}) => {},
@@ -17,9 +18,6 @@ const TodoContextProvider = ({children}) => {
   const [todoList, setTodoList] = useState([]);
   const [filteredTags, setFilteredTags] = useState([]);
 
-  useEffect(() => {
-    getTodoList();
-  }, []);
 
   const getTodoList = async () => {
     const response = await getStorageTodoList();
@@ -90,6 +88,7 @@ const TodoContextProvider = ({children}) => {
   const value = {
     todoList: todoList,
     filteredTags: filteredTags,
+    inItTodo:getTodoList,
     addTodo: addTodo,
     deleteTodo: deleteTodo,
     updateTodo: updateTodo,
