@@ -1,45 +1,104 @@
-import {useContext} from 'react';
+import {useContext, useRef} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {Pressable, View, Text, StyleSheet} from 'react-native';
+import {Pressable, View, Text, StyleSheet, Animated, Alert} from 'react-native';
 
 import {GlobalStyle} from '../../constants/styles';
 import {TodoContext} from '../../provider/todoContext';
 import CheckBox from '../ui/CheckBox';
 import TagList from './TagList';
 import Date from '../createEdit/Date';
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+import ImageButton from '../ui/ImageButton';
+import {images} from '../../constants/images';
 
 const ListItem = ({id, content, date, check, tag}) => {
   const todoCtx = useContext(TodoContext);
+  const swipeAnimation = useRef(new Animated.Value(0)).current;
+  const buttonSwipeAnimation = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
+  const {SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
+
   const itemPressHandler = () =>
     navigation.navigate('CreateEditTodo', {itemId: id});
 
   const checkBoxPressHandler = () => todoCtx.checkTodo(id);
+
+  const figureHorizontalDirection = delta =>
+    delta > 0 ? SWIPE_RIGHT : SWIPE_LEFT;
+  const detectSwipeDirection = ({dx, dy}) => {
+    return Math.abs(dx) > Math.abs(dy) && figureHorizontalDirection(dx);
+  };
+
+  const swipeHandler = (target, swipeValue) => {
+    Animated.timing(target, {
+      toValue: swipeValue,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const onSwipeHandler = (directionNull, gestureState) => {
+    const {dx, dy} = gestureState;
+    const direction = detectSwipeDirection({dx, dy});
+
+    if (direction === SWIPE_LEFT) {
+      swipeHandler(swipeAnimation, -110);
+      swipeHandler(buttonSwipeAnimation, 0);
+      return;
+    }
+    swipeHandler(swipeAnimation, 0);
+    swipeHandler(buttonSwipeAnimation, 100);
+  };
+
+  const deleteButtonPressHandler = async () => {
+    try {
+      await todoCtx.deleteTodo(id);
+    } catch (error) {
+      Alert.alert('Error!', 'Internal Server error', [
+        {text: 'Sorry!', style: 'cancel'},
+      ]);
+    }
+  };
+
   return (
-    <Pressable
-      onPress={itemPressHandler}
-      style={({pressed}) => pressed && styles.pressed}>
-      <View style={styles.todoItemContainer}>
-        <CheckBox
-          checked={check}
-          style={styles.checkBoxContainer}
-          onPress={checkBoxPressHandler}
-        />
-        <View style={styles.todoContentContainer}>
-          <View style={styles.todoWrap}>
-            <Text style={styles.todoContent}>{content}</Text>
-          </View>
-          {tag && (
-            <TagList
-              tag={tag}
-              style={styles.tagContainer}
-              onPress={todoCtx.manageTagList.bind(this, 'add')}
+    <GestureRecognizer onSwipe={onSwipeHandler}>
+      <Pressable
+        onPress={itemPressHandler}
+        style={({pressed}) => pressed && styles.pressed}>
+        <Animated.View style={[{transform: [{translateX: swipeAnimation}]}]}>
+          <View style={styles.todoItemContainer}>
+            <CheckBox
+              checked={check}
+              style={styles.checkBoxContainer}
+              onPress={checkBoxPressHandler}
             />
-          )}
-        </View>
-        <Date date={date} style={styles.dateContainer} />
-      </View>
-    </Pressable>
+            <View style={styles.todoContentContainer}>
+              <View style={styles.todoWrap}>
+                <Text style={styles.todoContent}>{content}</Text>
+              </View>
+              {tag && (
+                <TagList
+                  tag={tag}
+                  style={styles.tagContainer}
+                  onPress={todoCtx.manageTagList.bind(this, 'add')}
+                />
+              )}
+            </View>
+            <Date date={date} style={styles.dateContainer} />
+            <Animated.View
+              style={{transform: [{translateX: buttonSwipeAnimation}]}}>
+              <View>
+                <ImageButton
+                  style={styles.swipeDeleteButton}
+                  name={images.delete}
+                  onPress={deleteButtonPressHandler}
+                />
+              </View>
+            </Animated.View>
+          </View>
+        </Animated.View>
+      </Pressable>
+    </GestureRecognizer>
   );
 };
 
@@ -48,6 +107,9 @@ export default ListItem;
 const styles = StyleSheet.create({
   pressed: {
     opacity: 0.75,
+  },
+  swipeStyle: {
+    flexDirection: 'row',
   },
   todoItemContainer: {
     flex: 1,
@@ -66,11 +128,13 @@ const styles = StyleSheet.create({
     backgroundColor: GlobalStyle.colors.primary300,
   },
   todoContentContainer: {
+    width: '70%',
+    height: '100%',
     marginBottom: 10,
   },
   todoWrap: {
     flex: 1,
-    paddingRight: 100,
+    width: '100%',
   },
   todoContent: {
     fontSize: 22,
@@ -88,5 +152,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
+  },
+
+  swipeDeleteButton: {
+    width: 60,
+    height: 60,
+    transform: [{translateX: 100}],
+    backgroundColor: GlobalStyle.colors.error100,
   },
 });
