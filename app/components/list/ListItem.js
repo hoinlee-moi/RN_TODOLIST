@@ -24,7 +24,7 @@ const ListItem = ({id, content, date, check, tag}) => {
           <View style={styles.todoWrap}>
             <Text style={styles.todoContent}>{content}</Text>
           </View>
-          {tag.length !== 0 && (
+          {tag && (
             <TagList
               tag={tag}
               style={styles.tagContainer}

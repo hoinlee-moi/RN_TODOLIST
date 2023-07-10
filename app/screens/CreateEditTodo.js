@@ -21,28 +21,38 @@ const CreateEditTodo = ({route, navigation}) => {
 
   const deleteModalVisible = () => setDeleteModalState(prevState => !prevState);
 
-  const onSubmitHandler = async todoData => {
-    if (isEditing) {
-      const success = todoCtx.updateTodo(editItemId, todoData);
-      if (success) {
-        navigation.goBack();
-        return;
-      }
-    } else {
-      const success = await todoCtx.addTodo(todoData);
-      if (success) {
-        navigation.goBack();
-        return;
-      }
-    }
+  const failAlertModal = () => {
     Alert.alert('Error!', 'Internal Server error', [
       {text: 'Sorry!', style: 'cancel'},
     ]);
   };
 
+  const onSubmitHandler = async todoData => {
+    if (isEditing) {
+      try {
+        await todoCtx.updateTodo(editItemId, todoData);
+        navigation.goBack();
+        return;
+      } catch (error) {
+        failAlertModal();
+      }
+    } else {
+      try {
+        await todoCtx.addTodo(todoData);
+        navigation.goBack();
+      } catch (error) {
+        failAlertModal();
+      }
+    }
+  };
+
   const onDeleteHandler = async () => {
     const success = await todoCtx.deleteTodo(editItemId);
-    if (success) navigation.goBack();
+    if (success) {
+      navigation.goBack();
+      return;
+    }
+    failAlertModal();
   };
 
   return (
@@ -51,6 +61,7 @@ const CreateEditTodo = ({route, navigation}) => {
         isEditing={isEditing}
         defalutValue={selectTodoItem}
         onSubmit={onSubmitHandler}
+        onDelete={deleteModalVisible}
       />
       <ModalComponent
         isVisible={deleteModalState}

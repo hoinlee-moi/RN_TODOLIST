@@ -63,7 +63,7 @@ const TodoForm = ({isEditing, defalutValue, onSubmit, onDelete}) => {
       setErrorState(true);
       return;
     }
-    onSubmit();
+    onSubmit(inputValue);
   };
 
   return (
@@ -122,11 +122,13 @@ const TodoForm = ({isEditing, defalutValue, onSubmit, onDelete}) => {
           onPress={onSubmitHandler}>
           {isEditing ? '수정하기' : '추가하기'}
         </DefalutButton>
-        <ImageButton
-          name={images.delete}
-          onPress={onDelete}
-          style={styles.deleteButtonContainer}
-        />
+        {isEditing && (
+          <ImageButton
+            name={images.delete}
+            onPress={onDelete}
+            style={styles.deleteButtonContainer}
+          />
+        )}
       </View>
     </>
   );
@@ -182,10 +184,9 @@ const styles = StyleSheet.create({
     color: GlobalStyle.colors.error100,
   },
   buttonContainer: {
-    width: '50%',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     marginTop: 20,
   },
   submitButtonContainer: {
@@ -200,6 +201,7 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   deleteButtonContainer: {
+    marginLeft:40,
     width: 35,
     height: 35,
   },

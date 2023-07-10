@@ -2,53 +2,10 @@ import {createContext, useEffect, useState} from 'react';
 import {getRandom} from '../util/calculator';
 import {getStorageTodoList, manageStorageTodo} from './storage';
 
-const DUMMY_LIST = [
-  {
-    id: '0',
-    content: 'todo1',
-    date: new Date('2023-3-12'),
-    check: false,
-    tag: ['태그1'],
-  },
-  {
-    id: '1',
-    content: 'todo2',
-    date: new Date('2023-2-21'),
-    check: true,
-    tag: [],
-  },
-  {
-    id: '2',
-    content: 'todo3',
-    date: new Date('2023-3-29'),
-    check: false,
-    tag: [
-      '장보기',
-      '오늘밥먹을것임아아아',
-      '오늘밥먹을것임아아아2',
-      '오늘밥먹을것임아아아3오늘밥먹을것임아아아3오늘밥먹을것임아아아3오늘밥먹을것임아아아3오늘밥먹을것임아아아3오늘밥먹을것임아아아3',
-    ],
-  },
-  {
-    id: '3',
-    content: 'todo4',
-    date: new Date('2023-12-21'),
-    check: true,
-    tag: ['태그1'],
-  },
-  {
-    id: '4',
-    content:
-      'todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5todo5',
-    date: new Date('2021-1-5'),
-    check: false,
-    tag: ['태그1', '태그2', '태그3', '태그4'],
-  },
-];
 
 export const TodoContext = createContext({
   todoList: [],
-  filterTagList: [],
+  filteredTags: [],
   addTodo: ({content, date, tag}) => {},
   deleteTodo: id => {},
   updateTodo: (id, {content, date, tag}) => {},
@@ -57,12 +14,12 @@ export const TodoContext = createContext({
 });
 
 const TodoContextProvider = ({children}) => {
-  const [todoList, setTodoList] = useState(DUMMY_LIST);
-  const [filterTagList, setFilterTagList] = useState([]);
+  const [todoList, setTodoList] = useState([]);
+  const [filteredTags, setFilteredTags] = useState([]);
 
-  // useEffect(() => {
-  //   getTodoList();
-  // }, []);
+  useEffect(() => {
+    getTodoList();
+  }, []);
 
   const getTodoList = async () => {
     const response = await getStorageTodoList();
@@ -83,10 +40,11 @@ const TodoContextProvider = ({children}) => {
     return sortList;
   };
 
-  const addTodo = async todoData => {
-    const id = new Date().toString() + getRandom(1, 100).toString();
+  const addTodo = async (todoData) => {
+    const id = new Date().toString() + getRandom(1, 10000).toString();
+    
     const newTodo = {id: id, ...todoData};
-    const newState = [newTodo, ...todoData];
+    const newState = [newTodo, ...todoList];
     const success = await manageStorageMiddleWare(newState);
     return success;
   };
@@ -118,12 +76,12 @@ const TodoContextProvider = ({children}) => {
   const manageTagList = (state, tag) => {
     switch (state) {
       case 'delete':
-        const deleteTag = filterTagList.filter(filterTag => filterTag !== tag);
-        setFilterTagList(deleteTag);
+        const deleteTag = filteredTags.filter(filterTag => filterTag !== tag);
+        setFilteredTags(deleteTag);
         break;
       case 'add':
-        if (filterTagList.includes(tag)) break;
-        setFilterTagList(prevTagList => [...prevTagList, tag]);
+        if (filteredTags.includes(tag)) break;
+        setFilteredTags(prevTagList => [...prevTagList, tag]);
         break;
       default:
         return;
@@ -131,7 +89,7 @@ const TodoContextProvider = ({children}) => {
   };
   const value = {
     todoList: todoList,
-    filterTagList: filterTagList,
+    filteredTags: filteredTags,
     addTodo: addTodo,
     deleteTodo: deleteTodo,
     updateTodo: updateTodo,

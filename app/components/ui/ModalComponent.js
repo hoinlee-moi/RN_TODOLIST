@@ -37,15 +37,19 @@ const ModalComponent = ({
     <Modal visible={isVisible} animationType="fade" transparent>
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          {modalType === 'input' && (
-            <TextInput
-              style={styles.input}
-              placeholder={modalText}
-              onChangeText={handleInputChange}
-              maxLength={30}
-            />
-          )}
-          {modalType === 'alert' && <Text>{modalText}</Text>}
+          <View style={styles.contentContainer}>
+            {modalType === 'input' && (
+              <TextInput
+                style={styles.input}
+                placeholder={modalText}
+                onChangeText={handleInputChange}
+                maxLength={30}
+              />
+            )}
+            {modalType === 'alert' && (
+              <Text style={styles.text}>{modalText}</Text>
+            )}
+          </View>
           <View style={styles.buttonContainer}>
             <DefalutButton
               textStyle={[styles.button, styles.confirmButton]}
@@ -71,14 +75,22 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     justifyContent: 'center',
+    alignItems: 'center',
     width: '70%',
     minHeight: 150,
     padding: 20,
     borderRadius: 8,
     backgroundColor: GlobalStyle.colors.primary200,
   },
+  contentContainer: {
+    flex: 1,
+    width:'100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   input: {
-    height: 40,
+    width:'100%',
+    height: 45,
     marginTop: 10,
     marginBottom: 10,
     paddingHorizontal: 10,
@@ -87,6 +99,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 1,
+    width: '80%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
@@ -95,6 +108,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     color: '#000',
+  },
+  text: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: GlobalStyle.colors.error100,
   },
   confirmButton: {
     color: GlobalStyle.colors.confirm,
