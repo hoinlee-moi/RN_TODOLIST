@@ -1,79 +1,120 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# TO DO LIST (React_native)
 
-# Getting Started
+2개의 페이지로 이루어져 있는 간단한 할 일 리스트 앱
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
-## Step 1: Start the Metro Server
+<br><br>
+## 1. 기술 및 라이브러리
+---
+<br>
+- React Native
+- React Navigation
+- react-native-vector-icons
+- react-native-datepicker
+- react-native-swipe-gestures
+- Context API
+- AsyncStorage
+<br><br>
+<br><br>
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+## 2. 와이어 프레임
+---
+<br>
 
-To start Metro, run the following command from the _root_ of your React Native project:
+- [Figma확인](https://www.figma.com/file/svPF9JGtYi0HmKep6mqtvt/Untitled?type=design&node-id=0-1&mode=design&t=DSL2JnuJAggdrSVs-0)
 
-```bash
-# using npm
-npm start
+<br><br>
 
-# OR using Yarn
-yarn start
-```
+## 3. 기능
+---
+- UI 구현
+- 저장소 - AsyncStorage
+- RN_navigation 을 활용하여 스크린 구성
+- 스크린
+    - 할 일 리스트
+        - 할 일 리스트 조회
+        - 스와이프시 삭제버튼 / swipe-gesture사용
+        - 할일 체크 완료 기능 - 체크시 하단으로 체크 해제시 상단으로
+        - 태그 클릭 시 태그 Filtering
+        - Filtering된 태그 클릭시 Filtering 종료
+        - 날짜 표시하기 ( 7일 이상시 날짜,미만시 D-day) / date-picker사용
+        - D-day 1 일시 붉은 색상 강조
+        - 오른쪽 하단 플로팅 버튼(+모양)으로 작성 페이지 전환
+    - 할 일 작성 및 수정
+        - 작성 페이지
+            - 할 일 추가
+            - 날짜 추가
+            - 태그 추가
+            - 리스트 작성 하기
+        - 수정 페이지
+            - 할 일 수정
+            - 날짜 수정
+            - 태그 수정
+            - 삭제 가능
+            - 리스트 수정하기
+- 삭제 버튼시 모달창 등장
+    - 모달 창은 삭제와 취소로 구성
+- ContextAPI를 통한 전역 상태 구성
+    - asyncStorage를 활용한 sotrage 저장
 
-## Step 2: Start your Application
+<br><br>
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+## 구현 과정 및 트러블 슈팅
 
-### For Android
+### 1.React-native-navigation
+- react-router와 비슷하지 않을까 했지만 많이 달랐고 단순 화면 연결뿐 아닌 옵션을 통해 header를 만들 수 있거나 버튼을 만들어서 바로 navigation을 활용한 화면이동 가능한 라이브러리입니다
+- 첫 시도시 종속성 설치 부분을 넘어가버리고 /stack 으로만 설치하여 createNativeStackNavigator가 동작하지않는 현상이 있었는데 공식 문서를 보고 종속성 포함 재설치후 해결했습니다.
 
-```bash
-# using npm
-npm run android
+<br><br>
 
-# OR using Yarn
-yarn android
-```
+### 2.ImageButton 컴포넌트
+- require을 절대 경로로 사용한 경험이 부족하다보니 이미지로 만들어진 버튼을 Template literals을 통해 공용 컴포넌트로 만드려고 했으나 절대 경로 에러로 실패
+- 공용으로 사용하면서 image들 또한 한꺼번에 관리할 수 있으면 훨씬 관리에 편해질 것 같아 전역 상태 라이브러리와 동일시 생각해보았다
+- import 문을 통해 image 파일 경로 또한 받을 수 있는걸 확인하였고 images 라는 파일안에 image 파일들을 import하여 각 경로들을 객체로 다시 export 했다.
+- 각 객체의 key값을 통해 이미지 경로를 받을 수 있게 됐고 ImageButton 컴포넌트를 만들 때 images의 해당 key값을 전달해 줌으로써 공용 컴포넌트로 사용할 수 있었다.
 
-### For iOS
+<br><br>
 
-```bash
-# using npm
-npm run ios
+### 3.함수 하나로 사용하기
+- tag관련 함수나 input관련하여 로직을 만들 때 여러개의 동작 로직이 필요할 경우 굉장히 비슷하지만 조금은 다른 함수를 여러개 만들어야 했다
+- 비슷하지만 한곳에 넣을 경우 코드 길이가 너무 비대해지고 조건 식이 많이 들어가야 하다보니 함수를 나눠서 할까 했지만 나눌 경우 props로 넘겨줘야 되는 값들 또한 여러가지로 나누어져 굉장히 비 효율적이다.
+- reducer 처럼 switch문을 사용할 수 있을까 했지만 switch를 구별하기위한 조건을 props로 전달해주는 함수에 어떻게 넣어야 하나 고민하고 모던 javascript 찾아봤습니다
+- bind()란 메소드를 찾았고 bind()를 통해 첫번째 인자는 `this` 나머지 이어지는 인자들은 바인드된 함수의 인수로 제공된다는 것을 보고 props로 함수를 넘겨줄 때 bind()를 통해 switch 조건문의 조건으로 이용할 인자 하나를 미리 넘기는 것으로 여러 로직 함수들을 합쳐 props로 전달할 수 있었다.
 
-# OR using Yarn
-yarn ios
-```
+<br><br>
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+### 4.날짜 변환
+- date라는 파일에 날짜 관련 함수들을 전부 모아 관리하였고 거기서 getFormattedDate란 함수를 통해 출력값을 조절했습니다
+- 해당 함수 로직을 작성할 때 7일 미만은 `D-..`로 이상일 경우 `월,일`표현으로 , `D-day`를 사용하다보니 당일엔 `D-day` 1일이 남고 그 이상일 시 붉은색 표기 또한 로직으로 이어지려고 하니 굉장히 복잡하다 느꼈습니다.
+- new Date()함수 공식문서를 다시 찾아보고 해당하는 메소드들을 검색해보았습니다.
+- 우선 월 일로 계산하다 보니 세세한 시간 부분은 0으로 통일시킨뒤 시간계산을 하였고 계산한 결과값을 통해 출력 로직을 다르게 return, 붉은 색 표기 판단 데이터를 함께 넘겨 시간관련 로직을 완성할 수 있었습니다.
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+<br><br>
 
-## Step 3: Modifying your App
+### 5.swipe로직 , Animated
+- 처음 해보는 기능으로 구글 검색을 먼저 시작했습니다. 검색 후 라이브러리가 필요하다는 부분이 많아 swipe라이브러리를 설치하여 해당 라이브러리 github 문서를 읽고 제작하였습니다.
+- 공식문서를 확인하며 진행하는데도 동작이 어느 순서에 어떻게 이뤄지는지 파악하지 못하여 하나의 코드씩 console.log로 찍어보며 어떤 값이 담겨 오는지 어떤 동작에 어떻게 진행되는지 파악했습니다.
+- 덕분에 필요한 좌우 swipe 로직만 따로 구현하였고 Animated 에 연결하려 했으나 웹과 사용법이 너무나도 달라 많이 헤맸습니다.
+- 또 공식문서와 개발 블로그들을 참고 직접 여러 값들을 넣어보면서 테스트 해보았고 Animated가 어떤 식으로 동작하는지 알 수 있었습니다. 어설프지만 좌우 swipe를 통한 애니메이션 로직까지 완성했습니다.
 
-Now that you have successfully run the app, let's modify it.
+<br><br>
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+### 6.reducer와 비동기
+- 이전 웹 프로젝트를 진행할 때 관련하여 에러를 겪은 적이 있습니다.
+- reducer는 동기적으로 움직이는 게 좋으며 Switch문을 사용하니 async...awiat을 안쪽에서 사용하면 예기치 못한 에러가 많이 발생했다. 갑자기 api 호출이 2~3번 진행된다거나 아예 진행되지 않는다거나 하는 문제점을 겪었었습니다.
+- 하여 이번엔 reducer를 사용하지 않고 contextAPI에서 함수들을 다룰 수 있도록 하였고 storage에 저장하는 비동기 함수들은 sotrage 파일 속에 따로 모아서 정리 하였습니다.
+- 해당 함수들이 비동기 적으로 실행되기에 try catch문을 중간 중간 넣어 에러처리를 하였고 실행되지 않을 경우 Alert 경고창 이후 더이상 실행되지 않도록 하였습니다.
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+<br><br>
 
-## Congratulations! :tada:
+## 느낀점
+---
+<br>
+이번에 react-native 공부를 시작하고 프로그래밍을 하며 확실히 웹과의 차이를 많이 느꼈다.
+특히나 태그적으로도 전부 다르며 웹에서 당연시 생각하고 프로그래밍 하던 것들이 똑같이 진행되지 않는 것에 많이 당황했다<br>
+특히 CSS에서 보통 자식구조로 자동적으로 전달되기 때문에 사용하던 단순한 `font-size`도 직접적으로 하나하나 적용해 줘야 되는 것과 `View`태그는 기본 설정이 flex에 flexdirection이 column으로 되어 있는 등, 웹에서 코드 작성하던 습관이 그대로 앱에 적다가 많은 수정을 거친 것 같다. <br>
+하지만 별개로 앱 특유의 UI디자인들과 사용자 특성등 생각해야 하는 것들이 매우 재밋게 프로그래밍 한 것 같다.<br>
 
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+더구나 이번 코드 작성은 이전번 배운 클린코드 강의를 최대한 반영해서 진행하려 했으니 아직 강의가 진행중이고 손에 익지 않아서 조금 아쉬운 부분이 많이 있다.<br>
+최적화 부분에서도 많이 아쉬운 것 같고 어쨌든 하나를 만들어 봤으니 이후에 더욱 공부하여 계획 해놓은 아이디어가 기깔난 프로젝트를 하나 해봐야겠다.<br>
+앱이란 무엇인가의 기초적인 부분을 확실하게 짚고 넘어갈 수 있는 시간이었고 웹보다 데이터가 더 적어 공식 문서등을 활용해야 하는 시간이 많아 좀 더 면밀하게 살펴보고 코드를 작성하는 경험을 느낄 수 있었다
