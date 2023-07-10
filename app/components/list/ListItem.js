@@ -13,7 +13,6 @@ const ListItem = ({id, content, date, check, tag}) => {
   const navigation = useNavigation();
   const itemPressHandler = () =>
     navigation.navigate('CreateEditTodo', {itemId: id});
-
   return (
     <Pressable
       onPress={itemPressHandler}

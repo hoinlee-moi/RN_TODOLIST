@@ -18,7 +18,6 @@ const TodoList = () => {
   useEffect(() => {
     todoCtx.inItTodo();
   }, []);
-
   return (
     <View style={styles.screen}>
       <View style={styles.tagContainer}>
@@ -26,7 +25,7 @@ const TodoList = () => {
           <Text style={styles.tagTitle}>Tag :</Text>
         </View>
         <TagList
-          tag={todoCtx.filterTagList}
+          tag={todoCtx.filteredTags}
           style={styles.tagNameContainer}
           onPress={todoCtx.manageTagList.bind(this, 'delete')}
         />

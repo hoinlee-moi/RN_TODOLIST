@@ -2,7 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const getStorageTodoList = async () => {
   try {
-    const response = await AsyncStorage.getItem('todoList');
+    const data = await AsyncStorage.getItem('todoList');
+    const response = JSON.parse(data)
     return response;
   } catch (error) {
     return null;

@@ -1,7 +1,9 @@
 import {FlatList, StyleSheet, View} from 'react-native';
 import ListItem from './ListItem';
 
-const renderTodoItem = itemData => <ListItem {...itemData.item} />;
+const renderTodoItem = itemData => {
+return <ListItem {...itemData.item} />
+};
 const List = ({list}) => {
   return (
     <View style={styles.listContainer}>
